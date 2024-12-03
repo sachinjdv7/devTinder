@@ -1,34 +1,17 @@
 const express = require('express');
-const { auth, userAuth } = require('./middlewares/auth.middleware');
-
+const { connectDb } = require('./config/database');
 const app = express();
 const PORT = 8082;
 
-app.use('/admin', auth);
-
-app.get('/user', userAuth, (req, res) => {
-  try {
-    throw new Error();
-    res.send('user data send');
-  } catch (error) {
-    res.status(500).send('something went from try catch');
-  }
-});
-
-app.get('/admin/getData', (req, res) => {
-  res.send('data get successfully..');
-});
-
-app.delete('/admin/deleteData', (req, res) => {
-  res.send('successfully deleted the data');
-});
-
-app.use('/', (err, req, res, next) => {
-  if (err) {
-    res.status(500).send('something went wrong');
-  }
-});
-
-app.listen(PORT, () => {
-  console.log(`🚀 Express server is listening on ${PORT}`);
-});
+connectDb()
+  .then(() => {
+    app.on('error', (error) => {
+      console.log('Express server connection failed ', error);
+    });
+    app.listen(PORT, () => {
+      console.log(`🚀 Express server is listening on ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Connection failed to connect MongoDB', error);
+  });
