@@ -3,16 +3,16 @@ const express = require('express');
 const app = express();
 const PORT = 8082;
 
-app.use('/hello/2', (req, res) => {
-  res.send('abrakadabra');
+app.get('/user', (req, res) => {
+  res.send({ name: 'sachin' });
 });
 
-app.use('/hello', (req, res) => {
-  res.send('heloo helooo');
+app.post('/user', (req, res) => {
+  res.send('data successfully saved in db');
 });
 
-app.use('/test', (req, res) => {
-  res.send('Testing test route...');
+app.delete('/user', (req, res) => {
+  res.send('data successfully deleted in db');
 });
 
 app.use('/', (req, res) => {
