@@ -57,11 +57,14 @@ app.patch('/user', async (req, res) => {
   const userId = req.body.userId;
   const data = req.body;
   try {
-    await User.findByIdAndUpdate(userId, data, { returnDocument: 'after' });
+    await User.findByIdAndUpdate(userId, data, {
+      returnDocument: 'after',
+      runValidators: true,
+    });
     res.send('User updated successfully');
   } catch (error) {
     console.error('Error in /user route:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    res.status(500).json({ error: 'Internal server error', error });
   }
 });
 
