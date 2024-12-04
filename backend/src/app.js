@@ -65,6 +65,29 @@ app.patch('/user', async (req, res) => {
   }
 });
 
+app.patch('/user', async (req, res) => {
+  const { firstName, emailId } = req.body;
+
+  try {
+    const updatedUser = await User.findOneAndUpdate(
+      { emailId },
+      { firstName },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.send({
+      updatedUser,
+      message: 'User updated succssfully',
+    });
+  } catch (error) {
+    console.error('Error in /user route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 connectDb()
   .then(() => {
     app.on('error', (error) => {
