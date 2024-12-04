@@ -16,6 +16,55 @@ app.post('/signup', async (req, res) => {
   }
 });
 
+app.get('/user', async (req, res) => {
+  try {
+    const user = await User.findOne({
+      emailId: req.body.emailId,
+    });
+    if (!user) {
+      res.status(404).send('user not found');
+    }
+
+    res.send(user);
+  } catch (error) {
+    console.error('Error in /user route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/user', async (req, res) => {
+  try {
+    const userId = req.body.userId;
+
+    await User.findByIdAndDelete(userId);
+    res.send('User deleted successfully');
+  } catch (error) {
+    console.error('Error in /user route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/feed', async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.send(users);
+  } catch (error) {
+    res.status(500).send('something went wrong');
+  }
+});
+
+app.patch('/user', async (req, res) => {
+  const userId = req.body.userId;
+  const data = req.body;
+  try {
+    await User.findByIdAndUpdate(userId, data, { returnDocument: 'after' });
+    res.send('User updated successfully');
+  } catch (error) {
+    console.error('Error in /user route:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 connectDb()
   .then(() => {
     app.on('error', (error) => {
