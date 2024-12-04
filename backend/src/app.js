@@ -7,8 +7,8 @@ app.use(express.json());
 const User = require('./models/user.model');
 
 app.post('/signup', async (req, res) => {
-  const user = new User(req.body);
   try {
+    const user = new User(req.body);
     await user.save();
     res.send('User added successfully in DB');
   } catch (error) {
@@ -53,10 +53,25 @@ app.get('/feed', async (req, res) => {
   }
 });
 
-app.patch('/user', async (req, res) => {
-  const userId = req.body.userId;
-  const data = req.body;
+app.patch('/user/:userId', async (req, res) => {
   try {
+    const userId = req.params?.userId;
+    const data = req.body;
+
+    const ALLOWD_UPDATES = ['photoUrl', 'about', 'gender', 'age', 'skills'];
+
+    const isAllowedUpdates = Object.keys(data).every((k) =>
+      ALLOWD_UPDATES.includes(k)
+    );
+
+    if (!isAllowedUpdates) {
+      throw new Error('Update not allowed');
+    }
+
+    if (data?.skills.length > 10) {
+      throw new Error('Skills can not be more than 10');
+    }
+
     await User.findByIdAndUpdate(userId, data, {
       returnDocument: 'after',
       runValidators: true,
