@@ -1,20 +1,25 @@
-const auth = (req, res, next) => {
-  console.log('middleware checked...');
-  const token = 'sachin';
-  const isAdmin = token === 'sachin';
-  if (!isAdmin) res.status(401).send('user is not valid');
-  next();
-};
+const jwt = require('jsonwebtoken');
+const User = require('../models/user.model');
+const userAuth = async (req, res, next) => {
+  try {
+    const { token } = req.cookies;
 
-const userAuth = (req, res, next) => {
-  console.log('middleware checked...');
-  const token = 'sachin';
-  const isAdmin = token === 'sachin';
-  if (!isAdmin) res.status(401).send('user is not valid');
-  next();
+    if (!token) throw new Error('Token is not valid');
+
+    const { _id } = jwt.verify(token, 'Secret@123');
+
+    const user = await User.findById(_id);
+
+    if (!user) throw new Error('User not found');
+
+    req.user = user;
+
+    next();
+  } catch (error) {
+    res.status(400).send('Error' + error.message);
+  }
 };
 
 module.exports = {
-  auth,
   userAuth,
 };
