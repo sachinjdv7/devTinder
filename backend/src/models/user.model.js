@@ -53,8 +53,15 @@ const userSchema = new Schema(
         }
       },
     },
+    about: {
+      type: String,
+      default: 'This is the default message about the user',
+    },
     skills: {
       type: [String],
+    },
+    age: {
+      type: Number,
     },
   },
   { timestamps: true }
