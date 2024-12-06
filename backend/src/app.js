@@ -10,11 +10,15 @@ app.use(express.json());
 app.use(cookieParser());
 
 // Routers
-const { authRouter } = require('./routers/auth.router');
-const { profileRouter } = require('./routers/profile.router');
+const {
+  authRouter,
+  profileRouter,
+  connectionRequestRouter,
+} = require('./routers');
 
 app.use('/', authRouter);
 app.use('/', profileRouter);
+app.use('/', connectionRequestRouter);
 
 connectDb()
   .then(() => {
