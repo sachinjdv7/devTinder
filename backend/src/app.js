@@ -14,11 +14,13 @@ const {
   authRouter,
   profileRouter,
   connectionRequestRouter,
+  userRouter,
 } = require('./routers');
 
 app.use('/', authRouter);
 app.use('/', profileRouter);
 app.use('/', connectionRequestRouter);
+app.use('/', userRouter);
 
 connectDb()
   .then(() => {

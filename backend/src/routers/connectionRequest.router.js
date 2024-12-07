@@ -11,8 +11,7 @@ connectionRequestRouter.post(
   async (req, res) => {
     try {
       const fromUserId = req.user._id;
-      const toUserId = req.params.toUserId;
-      const status = req.params.status;
+      const { toUserId, status } = req.params;
 
       const allowedStatus = ['intrested', 'ignored'];
 
@@ -51,6 +50,58 @@ connectionRequestRouter.post(
 
       res.status(201).json({
         message: `${req.user.firstName} sent ${status} request to ${toUser.firstName}`,
+        data,
+      });
+    } catch (error) {
+      res.status(400).send('Error' + error.message);
+    }
+  }
+);
+
+connectionRequestRouter.post(
+  '/request/review/:status/:requestId',
+  userAuth,
+  async (req, res) => {
+    try {
+      const loggedInUser = req.user;
+      const { status, requestId } = req.params;
+
+      const allowedStatus = ['accepted', 'rejected'];
+
+      if (!allowedStatus.includes(status)) {
+        return res.status(400).json({ message: 'Invalid status' });
+      }
+      allowedStatus.includes(status);
+
+      const connectionRequestExist = await ConnectionRequest.findOne({
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: 'intrested',
+      });
+      console.log(connectionRequestExist);
+
+      if (!connectionRequestExist) {
+        const isSender = await ConnectionRequest.findOne({
+          _id: requestId,
+          fromUserId: loggedInUser._id,
+        });
+
+        if (isSender) {
+          return res.status(403).json({
+            message:
+              'You are the sender of this connection request and cannot accept it.',
+          });
+        }
+        return res
+          .status(404)
+          .json({ message: 'Connection request not found' });
+      }
+      connectionRequestExist.status = status;
+
+      const data = await connectionRequestExist.save();
+
+      res.status(200).json({
+        message: `connection request ${status} successfully..`,
         data,
       });
     } catch (error) {
