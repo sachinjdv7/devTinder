@@ -38,7 +38,9 @@ authRouter.post('/login', async (req, res) => {
     const isValidPassword = await isUserExist.compareUserPassword(password);
 
     if (!isValidPassword) {
-      throw new Error('Invalid password');
+      return res.status(401).json({
+        message: 'Invalid email or password.',
+      });
     }
 
     // Generating the token and gives the user id to hide

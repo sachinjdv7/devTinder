@@ -1,7 +1,7 @@
 import { useLogin } from '../hooks';
 
 const Login = () => {
-  const { emailId, setEmailId, password, setPassword, handleLogIn } =
+  const { emailId, setEmailId, password, setPassword, handleLogIn, error } =
     useLogin();
   return (
     <div className="flex justify-center my-10">
@@ -47,6 +47,7 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
+          {error && <p class="text-red-600 text-start">{error}</p>}
           <div className="card-actions justify-end my-2">
             <button className="btn btn-primary" onClick={handleLogIn}>
               Login

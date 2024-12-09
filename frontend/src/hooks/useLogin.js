@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router';
 const useLogin = () => {
   const [emailId, setEmailId] = useState('sachin@gmail.com');
   const [password, setPassword] = useState('Sachin@123');
+  const [error, setError] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -20,9 +21,21 @@ const useLogin = () => {
         dispatch(addUser(res.data.data));
         navigate('/');
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        const errorMessage =
+          err.response?.data?.message || 'Login failed. Please try again.';
+        setError(errorMessage);
+      });
   };
 
-  return { emailId, setEmailId, password, setPassword, handleLogIn };
+  return {
+    emailId,
+    setEmailId,
+    password,
+    setPassword,
+    handleLogIn,
+    error,
+    setError,
+  };
 };
 export default useLogin;
