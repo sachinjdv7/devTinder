@@ -1,24 +1,8 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { addUser } from '../store/userSlice';
-import { useNavigate } from 'react-router';
-import apiClient from '../services/apiClient';
+import { useLogin } from '../hooks';
 
 const Login = () => {
-  const [emailId, setEmailId] = useState('sachin@gmail.com');
-  const [password, setPassword] = useState('Sachin@123');
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
-  const handleLogIn = async () => {
-    const res = await apiClient.post('/login', {
-      emailId,
-      password,
-    });
-    dispatch(addUser(res.data.data));
-    navigate('/');
-  };
+  const { emailId, setEmailId, password, setPassword, handleLogIn } =
+    useLogin();
   return (
     <div className="flex justify-center my-10">
       <div className="card bg-base-300 w-96 shadow-xl">

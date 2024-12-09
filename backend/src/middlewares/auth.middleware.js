@@ -5,7 +5,8 @@ const userAuth = async (req, res, next) => {
   try {
     const { token } = req.cookies;
 
-    if (!token) throw new Error('Token is not valid');
+    if (!token)
+      return res.status(401).json({ message: 'Token expired, Login again' });
 
     const { _id } = jwt.verify(token, 'Secret@123');
 
