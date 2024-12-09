@@ -1,8 +1,10 @@
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router';
+import { useLogout } from '../hooks';
 
 const NavBar = () => {
   const user = useSelector((store) => store.user);
+  const { handleLogout } = useLogout();
   return (
     <div className="navbar bg-base-300">
       <div className="flex-1">
@@ -37,7 +39,7 @@ const NavBar = () => {
                 <a>Settings</a>
               </li>
               <li>
-                <a>Logout</a>
+                <a onClick={handleLogout}>Logout</a>
               </li>
             </ul>
           </div>
