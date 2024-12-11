@@ -7,9 +7,16 @@ import { useCurrentUser } from '../hooks';
 const Body = () => {
   useCurrentUser();
   return (
-    <div>
+    <div className="flex flex-col min-h-screen bg-base-200">
+      {/* Navbar */}
       <NavBar />
-      <Outlet />
+
+      {/* Main Content */}
+      <div className="flex-grow">
+        <Outlet />
+      </div>
+
+      {/* Footer */}
       <Footer />
     </div>
   );

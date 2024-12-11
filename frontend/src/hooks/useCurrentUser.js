@@ -18,7 +18,7 @@ const userCurrentuser = () => {
           if (err.status === 401) navigate('/login');
           console.error(err);
         });
-  }, []);
+  }, [user]);
 };
 
 export default userCurrentuser;
