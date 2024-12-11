@@ -11,30 +11,29 @@ const EditProfile = ({ user }) => {
   const [age, setAge] = useState(user.age);
   const [gender, setGender] = useState(user.gender);
   const [about, setAbout] = useState(user.about);
+  const [error, setError] = useState('');
+  const [showToast, setShowToast] = useState(false);
   const dispatch = useDispatch();
 
-  const handleEditProfile = () => {
-    apiClient
-      .patch('/profile/edit', {
+  const handleEditProfile = async () => {
+    setError('');
+    try {
+      const user = await apiClient.put('/profile/edit', {
         firstName,
         lastName,
+        photoUrl,
         age,
         gender,
         about,
-      })
-      .then((res) => {
-        // Add success notification or redirect logic here
-        dispatch(addUser(res.data.data));
-        alert('successfully updated');
-      })
-      .catch((error) => {
-        console.log('Error details:', {
-          message: error.message,
-          response: error.response,
-          status: error.response?.status,
-        });
-        alert('failed to updated');
       });
+      dispatch(addUser(user?.data?.data));
+      setShowToast(true);
+      setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+    } catch (error) {
+      setError(err.response.data);
+    }
   };
   return (
     <div className="flex flex-col lg:flex-row justify-center items-start min-h-screen bg-base-200 gap-5 p-5">
@@ -140,6 +139,13 @@ const EditProfile = ({ user }) => {
           </button>
         </div>
       </div>
+      {showToast && (
+        <div className="toast toast-top toast-center">
+          <div className="alert alert-success">
+            <span>Profile saved successfully.</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
