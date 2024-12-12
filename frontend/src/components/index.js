@@ -5,3 +5,4 @@ export { default as Login } from './Login';
 export { default as Feed } from './Feed';
 export { default as UserCard } from './UserCard';
 export { default as Connections } from './Connections';
+export { default as ConnectionRequests } from './ConnectionRequests';
