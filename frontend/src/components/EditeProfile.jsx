@@ -1,40 +1,24 @@
-import { useState } from 'react';
+import { useEditProfile } from '../hooks';
 import UserCard from './UserCard';
-import apiClient from '../services/apiClient';
-import { useDispatch } from 'react-redux';
-import { addUser } from '../store/userSlice';
 
 const EditProfile = ({ user }) => {
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [lastName, setLastName] = useState(user.lastName);
-  const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
-  const [age, setAge] = useState(user.age);
-  const [gender, setGender] = useState(user.gender);
-  const [about, setAbout] = useState(user.about);
-  const [error, setError] = useState('');
-  const [showToast, setShowToast] = useState(false);
-  const dispatch = useDispatch();
-
-  const handleEditProfile = async () => {
-    setError('');
-    try {
-      const user = await apiClient.put('/profile/edit', {
-        firstName,
-        lastName,
-        photoUrl,
-        age,
-        gender,
-        about,
-      });
-      dispatch(addUser(user?.data?.data));
-      setShowToast(true);
-      setTimeout(() => {
-        setShowToast(false);
-      }, 3000);
-    } catch (error) {
-      setError(err.response.data);
-    }
-  };
+  const {
+    firstName,
+    setFirstName,
+    lastName,
+    setLastName,
+    photoUrl,
+    setPhotoUrl,
+    age,
+    setAge,
+    gender,
+    setGender,
+    about,
+    setAbout,
+    error,
+    showToast,
+    handleEditProfile,
+  } = useEditProfile(user);
   return (
     <div className="flex flex-col lg:flex-row justify-center items-start min-h-screen bg-base-200 gap-5 p-5">
       <div className="w-full max-w-md">
