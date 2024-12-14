@@ -1,11 +1,27 @@
+import { useDispatch } from 'react-redux';
 import { useConnectionRequests } from '../hooks';
+import apiClient from '../services/apiClient';
+import { removeConnectionRequest } from '../store/connectionRequestsSlice';
 
 const ConnectionRequests = () => {
   const { requests } = useConnectionRequests();
+  const dispatch = useDispatch();
+
+  const reviewRequest = async (status, _id) => {
+    try {
+      await apiClient.post('/request/review/' + status + '/' + _id, {});
+      dispatch(removeConnectionRequest(_id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   if (!requests) return;
 
-  if (requests.length === 0) return <div>No Connections</div>;
+  if (requests.length === 0)
+    return (
+      <div className="flex justify-center text-3xl my-10">No Connections</div>
+    );
 
   return (
     <div className=" text-center my-10">
@@ -35,8 +51,18 @@ const ConnectionRequests = () => {
               <p>{about}</p>
             </div>
             <div>
-              <button className="btn btn-primary mx-2">Reject</button>
-              <button className="btn btn-secondary mx-2">Accept</button>
+              <button
+                className="btn btn-primary mx-2"
+                onClick={() => reviewRequest('rejected', request._id)}
+              >
+                Reject
+              </button>
+              <button
+                className="btn btn-secondary mx-2"
+                onClick={() => reviewRequest('accepted', request._id)}
+              >
+                Accept
+              </button>
             </div>
           </div>
         );
