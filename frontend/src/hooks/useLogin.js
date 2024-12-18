@@ -5,8 +5,8 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 const useLogin = () => {
-  const [emailId, setEmailId] = useState('sachin@gmail.com');
-  const [password, setPassword] = useState('Sachin@123');
+  const [emailId, setEmailId] = useState('');
+  const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [isLogin, setIsLogin] = useState(true);
