@@ -1,7 +1,20 @@
 import React from 'react';
+import apiClient from '../services/apiClient';
+import { useDispatch } from 'react-redux';
+import { removeFeed } from '../store/feedSlice';
 
 const UserCard = ({ user }) => {
-  const { firstName, lastName, age, gender, photoUrl, about } = user;
+  const { _id, firstName, lastName, age, gender, photoUrl, about } = user;
+  const dispatch = useDispatch();
+
+  const handleRequest = async (status, userId) => {
+    try {
+      const req = await apiClient.post(`/request/send/${status}/${userId}`, {});
+      dispatch(removeFeed(userId));
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="card bg-base-300 shadow-xl p-4 w-full max-w-md">
@@ -26,8 +39,18 @@ const UserCard = ({ user }) => {
           {about}
         </p>
         <div className="card-actions justify-center mt-4">
-          <button className="btn btn-primary">Ignored</button>
-          <button className="btn btn-secondary">Send Request</button>
+          <button
+            className="btn btn-primary"
+            onClick={() => handleRequest('ignored', _id)}
+          >
+            Ignored
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={() => handleRequest('intrested', _id)}
+          >
+            Send Request
+          </button>
         </div>
       </div>
     </div>
