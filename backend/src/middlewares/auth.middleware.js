@@ -8,7 +8,7 @@ const userAuth = async (req, res, next) => {
     if (!token)
       return res.status(401).json({ message: 'Token expired, Login again' });
 
-    const { _id } = jwt.verify(token, 'Secret@123');
+    const { _id } = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findById(_id);
 
