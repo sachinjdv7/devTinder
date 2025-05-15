@@ -3,6 +3,7 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const { connectDb } = require("./config/database");
 require("dotenv").config();
+require("./utils/cron-job");
 
 const app = express();
 const PORT = process.env.PORT ?? 7777;
